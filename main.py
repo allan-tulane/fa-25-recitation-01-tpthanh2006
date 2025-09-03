@@ -32,12 +32,18 @@ def _binary_search(mylist, key, left, right):
 	Returns:
 	  index of key in mylist, or -1 if not present.
 	"""
-	### TODO
+	if not (0 <= left <= right < len(mylist)):
+		return -1
 
-	###
+	mid = left + (right - left) // 2
 
-
-
+	if mylist[mid] == key:
+		return mid
+	
+	if mylist[mid] < key:
+		return _binary_search(mylist, key, mid + 1, right)
+	
+	return _binary_search(mylist, key, left, mid - 1)
 
 def time_search(search_fn, mylist, key):
 	"""
@@ -57,9 +63,11 @@ def time_search(search_fn, mylist, key):
 	  the number of milliseconds it takes to run this
 	  search function on this input.
 	"""
-	### TODO
+	start_time = time.perf_counter()
+	search_fn(mylist, key)
+	end_time = time.perf_counter()
 
-	###
+	return (end_time - start_time) * 100
 
 def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
 	"""
@@ -76,9 +84,16 @@ def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
 	  indicating the number of milliseconds it takes
 	  for each method to run on each value of n
 	"""
-	### TODO
+	search_times = []
 
-	###
+	for s in sizes:
+		n = int(s)
+		mylist = [i for i in range(n)]
+		linear_search_time = time_search(linear_search, mylist, -1)
+		binary_search_time = time_search(binary_search, mylist, -1)
+		search_times.append((n, linear_search_time, binary_search_time))
+	
+	return search_times
 
 def print_results(results):
 	""" done """
@@ -87,3 +102,4 @@ def print_results(results):
 							floatfmt=".3f",
 							tablefmt="github"))
 
+print_results(compare_search())
